@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    <!-- default-init-method="init" 
+    default-destroy-method="destroy"> -->
+    
+	<!-- 
+	**************Spring Bean 作用域  scope="singleton"**************
+	singleton	在spring IoC容器仅存在一个Bean实例，Bean以单例方式存在，默认值
+	prototype	每次从容器中调用Bean时，都返回一个新的实例，即每次调用getBean()时，相当于执行newXxxBean()
+	request	每次HTTP请求都会创建一个新的Bean，该作用域仅适用于WebApplicationContext环境
+	session	同一个HTTP Session共享一个Bean，不同Session使用不同的Bean，仅适用于WebApplicationContext环境
+	global-session	一般用于Portlet应用环境，该运用域仅适用于WebApplicationContext环境
+	-->
+
+   <!-- <bean id="helloWorld" class="com.ioc.bean.HelloWorld" scope="singleton"> -->
+   <bean id="helloWorld" class="com.ioc.bean.HelloWorld" scope="prototype">
+   </bean>
+   
+   <!-- 
+   **************Spring Bean 生命周期**************
+   Bean的生命周期可以表达为：Bean的定义——Bean的初始化——Bean的使用——Bean的销毁
+   init-method 属性指定一个方法，在实例化 bean 时，立即调用该方法。
+   destroy-method 指定一个方法，只有从容器中移除 bean 之后，才能调用该方法。
+   -->
+  <bean id="helloWorld2" class="com.ioc.bean.HelloWorld2"
+       init-method="init" destroy-method="destroy">
+       <property name="message" value="Hello World!"/>
+   </bean>
+   
+   <!-- 
+   **************Spring Bean 后置处理器**************
+   -->
+   <bean id="helloWorld3" class="com.ioc.bean.HelloWorld3"
+       init-method="init" destroy-method="destroy">
+       <property name="message" value="Hello World!"/>
+   </bean>
+   <bean class="com.ioc.bean.InitHelloWorld" />
+   
+   <!-- 
+   **************Spring Bean 定义继承**************
+   在这里你可以观察到，我们创建 “helloIndia” bean 的同时并没有传递 message2，但是由于 Bean 定义的继承，所以它传递了 message2。
+   你可以创建一个 Bean 定义模板，不需要花太多功夫它就可以被其他子 bean 定义使用。在定义一个 Bean 定义模板时，你不应该指定类的属性，而应该指定带 true 值的抽象属性，
+   -->
+   <bean id="beanTeamplate" abstract="true"><!-- 在定义一个 Bean 定义模板时，你不应该指定类的属性，而应该指定带 true 值的抽象属性 -->
+      <property name="message1" value="Hello World!"/>
+      <property name="message2" value="Hello Second World!"/>
+      <property name="message3" value="Namaste India!"/>
+   </bean>
+   
+   <bean id="helloWorld4" class="com.ioc.bean.HelloWorld4">
+      <property name="message1" value="Hello World!"/>
+      <property name="message2" value="Hello Second World!"/>
+   </bean>
+   
+   <!-- helloIndia 可以继承beanTeamplate  也可以继承helloWorld4 -->
+   <bean id="helloIndia" class="com.ioc.bean.HelloIndia" parent="beanTeamplate">
+      <property name="message1" value="Hello India!"/>
+      <property name="message3" value="Namaste India!"/>
+   </bean>
+   <!-- <bean id="helloIndia" class="com.ioc.bean.HelloIndia" parent="helloWorld4">
+      <property name="message1" value="Hello India!"/>
+      <property name="message3" value="Namaste India!"/>
+   </bean> -->
+
+</beans>
